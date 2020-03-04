@@ -10,3 +10,15 @@ Let's try to get some numbers and analyze what is going on:
  - Visual analysis by plotting data using charts and maps
    - Distribution of COVID-19 cases worldwide and for each country
    - Epidemiological curve worldwide and for each country
+
+Here it is a graph with the epidemiological curve for different countries (Hubei excluded):
+
+Here it is a graph with the epidemiological curve for different countries (Hubei excluded):
+
+![](./epidemiologicalCurveByCountry.png)
+
+Let's compare trend among differenc countries; so get date for each country in wich began 50 or more cases and consider it day 0:
+
+![](./epidemiologicalCurveByCountryRel.png)
+
+Here there is the [data table](./casesByCountry.csv) related to the graph.
