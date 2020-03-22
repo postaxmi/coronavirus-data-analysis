@@ -84,16 +84,23 @@ def getReportUrls(reportsListPath):
     with open(reportsListPath, encoding='utf-8') as f:
         soup = BeautifulSoup(f, 'html.parser')
         elements = soup.select('.sf-content-block.content-block p')
+        # each elemant is a paragraph for a single situation report
+        # some paragraphs have more than one 'a' element, only one is the right one
+        # save a list of unique urls in order to avoid duplicates
+        uniqueUrls = []
         for el in elements:
             try:
-                url = el.select_one('a')
-                if(url is not None):
-                    url = baseUrl + url['href']
-                    name = el.text.replace(u'\xa0', u' ')
-                    result.append({
-                        'url': url,
-                        'name': name
-                    })
+                urlEls = el.select('a') # some paragraphs have more than one 'a' element, only one is the right one
+                for urlEl in urlEls:
+                    url = urlEl['href']
+                    if ('sitrep' in url and url not in uniqueUrls): # check if the url is related to the situation report and it is a new one
+                        uniqueUrls.append(url)
+                        url = baseUrl + url
+                        name = el.text.replace(u'\xa0', u' ')
+                        result.append({
+                            'url': url,
+                            'name': name
+                        })
             except Exception as e:
                 print('Exception during parsing of an element expected to have an url')
                 print(e)
@@ -188,7 +195,10 @@ def extractDataFromText(text, skipRegex):
             n_table = n_table + 1
         # skip empty lines and lines that match the skipRegex
         if line != '' and re.match(skipRegex, line) is None:
-            match = re.match(r'\d+|-', line)  # check if it is a number
+            # remove empty spaces
+            # (sometimes some numbers such as 31211 of China for situation report 2020-02-07 are written '31 211' instead of '31211')
+            line = line.replace(' ','')
+            match = re.match(r'\d+|-', line)  # check if it is a number or '-' that means 0
             if match:
                 val = match.group()
                 if val == '-':
@@ -249,4 +259,7 @@ if __name__ == '__main__':
         l.append(df)
     d = pandas.concat(l)
     d.to_csv(os.path.join(basePath, 'df'+datetime.date.today().isoformat()+'.csv'))
+    # download italian data of Protezione Civile national service
+    downloadContent('https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-regioni/dpc-covid19-ita-regioni.csv', 'data/ITAregioni.csv')
+    downloadContent('https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-province/dpc-covid19-ita-province.csv', 'data/ITAprovince.csv')
     print('launch jupyter notebook')

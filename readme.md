@@ -17,11 +17,13 @@ Let's try to get some numbers and analyze what is going on:
 
 ## Analysis
 
-Here it is a graph with the epidemiological curve for different countries (Hubei excluded):
-
-Here it is a graph with the epidemiological curve for different countries (Hubei excluded):
+Here it is a graph with the epidemiological curve for different countries:
 
 ![](./epidemiologicalCurveByCountry.png)
+
+Here it is a graph with the epidemiological curve for different countries (China excluded):
+
+![](./epidemiologicalCurveByCountryWithoutChina.png)
 
 Let's compare trend among different countries; so get date for each country in wich began 50 or more cases and consider it day 0:
 
